@@ -41,7 +41,12 @@ namespace Algo
 
         [SerializeField]
         private List<Bar> m_BarValues = new List<Bar>();
-        public List<Bar> BarValues { get {  return m_BarValues; } }
+        public List<Bar> BarValues { get {  return m_BarValues; }set { m_BarValues = value; } }
+
+        public void SetNewBarValue(Bar bar)
+        {
+            m_BarValues.Add(bar);
+        }
 
 
 

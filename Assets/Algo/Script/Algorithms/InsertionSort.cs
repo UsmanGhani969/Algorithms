@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Threading.Tasks;
 
 
 namespace Algo
@@ -26,11 +27,11 @@ namespace Algo
         }
 
 
-        private void StartSort()
+        private async void StartSort()
         {
-            StartCoroutine(SortRoutine());
+            await Sort();
         }
-        IEnumerator SortRoutine()
+        private async Task Sort()
         {
             List<Bar> _list = GenerateBars._Instance.BarValues;
 
@@ -47,7 +48,7 @@ namespace Algo
                 }
                 _list[j + 1]._Value = key;
 
-                yield return new WaitForSeconds(0f);
+                await Task.Delay(1);
             }
         }
     }

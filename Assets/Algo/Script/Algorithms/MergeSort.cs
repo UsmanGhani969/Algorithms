@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using System.Threading.Tasks;
 
 namespace Algo
 {
@@ -26,66 +27,66 @@ namespace Algo
         }
 
 
-        private void StartSort()
+        private async void StartSort()
         {
-            SortRoutine(GenerateBars._Instance.BarValues.ToArray(),0,GenerateBars._Instance.BarValues.Count-1);
+            await SortRoutine(GenerateBars._Instance.BarValues,0,GenerateBars._Instance.BarValues.Count-1);
         }
-        private void SortRoutine(Bar[] arr, int low, int high)
+        private async Task SortRoutine(List<Bar> arr, int low, int high)
         {
 
-            if (low < high)
-            {
-                int mid = ( low+high) / 2;
+            if (low >= high) return;
 
-                SortRoutine(arr, low, mid);
-                SortRoutine(arr, mid + 1, high);
+            int mid = ( low+high) / 2;
 
-                Merge(arr, low, mid, high);
-            }
+            await SortRoutine(arr, low, mid);
+            await SortRoutine(arr, mid + 1, high);
+
+            await Merge(arr, low, mid, high);
+
         }
 
-
-        private void Merge(Bar[] arr, int low, int mid, int high)
+        async Task Merge(List<Bar> arr, int low, int mid, int high)
         {
-            int i = low;
-            int j = mid + 1;
-            int k = low;
+            int left = low;
+            int right = mid + 1;
 
-            Bar[] left = new Bar[mid-i+1];
-            Bar[] right = new Bar[high-mid];
+            List<int> temp = new List<int>();
 
-            Array.Copy(arr,low, left, 0, mid - i + 1); 
-            Array.Copy(arr,mid+1, right, 0, high-mid);
-
-
-            while ((i<=mid) && (j<=high))
+            while ((left <= mid) && (right <= high))
             {
 
-                if (left[i]._Value < right[j]._Value)
+                if (arr[left]._Value <= arr[right]._Value)
                 {
-                    arr[k]._Value = left[i]._Value;
-                    k++;
-                    i++;
+                    temp.Add(arr[left]._Value);
+                    left++;
                 }
                 else
                 {
-                    arr[k]._Value = right[j]._Value;
-                    k++;
-                    j++;
+                    temp.Add(arr[right]._Value);
+                    right++;
                 }
             }
 
-
-            for(;i<=mid;i++)
+            while ((left <= mid))
             {
-                arr[k++]._Value = left[i]._Value;
+                temp.Add(arr[left]._Value);
+                left++;
             }
 
-            for(;j<=high;j++)
+            while (right <= high)
             {
-                arr[k++]._Value = right[j]._Value;
+                temp.Add(arr[right]._Value);
+                right++;
             }
 
+
+            for (int i = low; i <= high; i++)
+            {
+                arr[i]._Value = temp[i - low];
+                await Task.Delay(1);
+            }
         }
+
+
     }
 }

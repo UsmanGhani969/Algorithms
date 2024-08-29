@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,11 +28,11 @@ namespace Algo
         }
 
 
-        private void StartSort()
+        private async void StartSort()
         {
-            StartCoroutine(SortRoutine());
+            await Sort();
         }
-        IEnumerator SortRoutine()
+        private async Task Sort()
         {
             List<Bar> _list = GenerateBars._Instance.BarValues;
 
@@ -46,8 +47,7 @@ namespace Algo
                         int temp = _list[j]._Value;
                         _list[j]._Value = _list[j + 1]._Value;
                         _list[j + 1]._Value = temp;
-
-                        yield return new WaitForSeconds(0f);
+                        await Task.Delay(1);
                     }
 
                 }
